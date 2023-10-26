@@ -1,17 +1,60 @@
-import pyqrcode
-import png
-from pyqrcode import QRCode
-import tkinter as tk
 from tkinter import *
-window = Tk()  
-window.geometry('300x350')
-window.title('QR CODE GEN')
-Label(window,text='Let’s Create QR Code',font='arial 15').pack()
-def create_qrcode():
-    s1=s.get()
-    qr = pyqrcode.create(s1)
-    qr.png('myqr.png', scale = 6)
-    Label(window,text='QR Code is created and saved successfully').pack()
-Entry(window,textvariable=s,font='arial 15').pack()
-Button(window,text='create',bg='pink',command=create_qrcode).pack()
-window.mainloop()
+from tkinter import messagebox
+import pyqrcode
+
+ws = Tk()
+ws.title("Qr Gen")
+ws.config(bg='#F25252')
+
+def generate_QR():
+    if len(user_input.get())!=0 :
+        global qr,img
+        qr = pyqrcode.create(user_input.get())
+        img = BitmapImage(data = qr.xbm(scale=8))
+    else:
+        messagebox.showwarning('warning', 'All Fields are Required!')
+    try:
+        display_code()
+    except:
+        pass
+
+def display_code():
+    img_lbl.config(image = img)
+    output.config(text="QR code of " + user_input.get())
+
+
+lbl = Label(
+    ws,
+    text="Enter message or URL",
+    bg='#F25252'
+    )
+lbl.pack()
+
+user_input = StringVar()
+entry = Entry(
+    ws,
+    textvariable = user_input
+    )
+entry.pack(padx=10)
+
+
+button = Button(
+    ws,
+    text = "generate_QR",
+    width=15,
+    command = generate_QR
+    )
+button.pack(pady=10)
+
+img_lbl = Label(
+    ws,
+    bg='#F25252')
+img_lbl.pack()
+output = Label(
+    ws,
+    text="",
+    bg='#F25252'
+    )
+output.pack()
+ 
+ws.mainloop()
